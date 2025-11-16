@@ -1,4 +1,14 @@
-const MovieModal = ({ movie, onClose }: MovieModalProps) => {
+import { useEffect, MouseEvent } from 'react';
+import { createPortal } from 'react-dom';
+import { Movie } from '../../types/movie';
+import styles from './MovieModal.module.css';
+
+interface MovieModalProps {
+  movie: Movie;
+  onClose: () => void;
+}
+
+export default function MovieModal({ movie, onClose }: MovieModalProps) {
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -6,39 +16,50 @@ const MovieModal = ({ movie, onClose }: MovieModalProps) => {
       }
     };
 
+    // Блокуємо скролінг сторінки
     document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', handleEscape);
 
+    // Очищуємо при закритті модалки
     return () => {
       document.body.style.overflow = 'auto';
       window.removeEventListener('keydown', handleEscape);
     };
   }, [onClose]);
 
-  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleBackdropClick = (e: MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
   };
 
   return createPortal(
-    <div style={styles.backdrop} onClick={handleBackdropClick} role="dialog" aria-modal="true">
-      <div style={styles.modal}>
-        <button style={styles.closeButton} onClick={onClose} aria-label="Close modal">
+    <div
+      className={styles.backdrop}
+      onClick={handleBackdropClick}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div className={styles.modal}>
+        <button
+          className={styles.closeButton}
+          onClick={onClose}
+          aria-label="Close modal"
+        >
           &times;
         </button>
         <img
           src={
             movie.backdrop_path
               ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}`
-              : 'https://via.placeholder.com/1920x1080?text=No+Image'
+              : 'https://via.placeholder.com/1920x1080?text=No+Backdrop'
           }
           alt={movie.title}
-          style={styles.modalImage}
+          className={styles.image}
         />
-        <div style={styles.content}>
+        <div className={styles.content}>
           <h2>{movie.title}</h2>
-          <p>{movie.overview}</p>
+          <p>{movie.overview || 'No overview available.'}</p>
           <p>
             <strong>Release Date:</strong> {movie.release_date || 'N/A'}
           </p>
@@ -50,4 +71,4 @@ const MovieModal = ({ movie, onClose }: MovieModalProps) => {
     </div>,
     document.body
   );
-};
+}
