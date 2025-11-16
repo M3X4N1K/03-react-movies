@@ -1,24 +1,37 @@
+import { useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
+import { Movie } from '../../types/movie';
+import { fetchMovies } from '../../services/movieService';
+import SearchBar from '../SearchBar/SearchBar';
+import MovieGrid from '../MovieGrid/MovieGrid';
+import Loader from '../Loader/Loader';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import MovieModal from '../MovieModal/MovieModal';
+import styles from './App.module.css';
+
 export default function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
   const handleSearch = async (query: string) => {
+    // Очищуємо попередні результати
+    setMovies([]);
     setLoading(true);
     setError(false);
-    setMovies([]);
 
     try {
       const results = await fetchMovies(query);
-      
+
       if (results.length === 0) {
-        alert('No movies found for your request.');
+        toast.error('No movies found for your request.');
       }
-      
+
       setMovies(results);
     } catch (err) {
       setError(true);
+      toast.error('Failed to fetch movies. Please try again.');
       console.error('Error fetching movies:', err);
     } finally {
       setLoading(false);
@@ -34,16 +47,44 @@ export default function App() {
   };
 
   return (
-    <div style={styles.app}>
+    <div className={styles.app}>
       <SearchBar onSubmit={handleSearch} />
-      <main style={styles.main}>
+      
+      <main className={styles.main}>
         {loading && <Loader />}
         {error && <ErrorMessage />}
         {!loading && !error && movies.length > 0 && (
           <MovieGrid movies={movies} onSelect={handleMovieSelect} />
         )}
       </main>
-      {selectedMovie && <MovieModal movie={selectedMovie} onClose={handleCloseModal} />}
+
+      {selectedMovie && (
+        <MovieModal movie={selectedMovie} onClose={handleCloseModal} />
+      )}
+
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#16213e',
+            color: '#fff',
+            border: '1px solid #e94560',
+          },
+          success: {
+            iconTheme: {
+              primary: '#e94560',
+              secondary: '#fff',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#e94560',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
     </div>
   );
 }
