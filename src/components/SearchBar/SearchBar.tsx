@@ -1,51 +1,53 @@
-const SearchBar = ({ onSubmit }: SearchBarProps) => {
-  const [query, setQuery] = useState('');
+import { FormEvent } from 'react';
+import toast from 'react-hot-toast';
+import styles from './SearchBar.module.css';
 
-  const handleSubmit = (e: React.FormEvent) => {
+interface SearchBarProps {
+  onSubmit: (query: string) => void;
+}
+
+export default function SearchBar({ onSubmit }: SearchBarProps) {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const trimmedQuery = query.trim();
 
-    if (!trimmedQuery) {
-      alert('Please enter your search query.');
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const query = formData.get('query') as string;
+
+    if (!query.trim()) {
+      toast.error('Please enter your search query.');
       return;
     }
 
-    onSubmit(trimmedQuery);
-    setQuery('');
+    onSubmit(query.trim());
+    form.reset();
   };
 
   return (
-    <header style={styles.header}>
-      <div style={styles.container}>
+    <header className={styles.header}>
+      <div className={styles.container}>
         <a
-          style={styles.link}
+          className={styles.link}
           href="https://www.themoviedb.org/"
           target="_blank"
           rel="noopener noreferrer"
         >
           Powered by TMDB
         </a>
-        <div style={styles.form}>
+        <form className={styles.form} onSubmit={handleSubmit}>
           <input
-            style={styles.input}
+            className={styles.input}
             type="text"
             name="query"
             autoComplete="off"
             placeholder="Search movies..."
             autoFocus
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleSubmit(e);
-              }
-            }}
           />
-          <button style={styles.button} type="button" onClick={handleSubmit}>
+          <button className={styles.button} type="submit">
             Search
           </button>
-        </div>
+        </form>
       </div>
     </header>
   );
-};
+}
