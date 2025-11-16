@@ -1,4 +1,7 @@
-import { FormEvent } from 'react';
+// src/components/SearchBar/SearchBar.tsx
+// Компонент хедера з формою пошуку фільмів
+
+import type { FormEvent } from 'react';
 import toast from 'react-hot-toast';
 import styles from './SearchBar.module.css';
 

@@ -1,4 +1,7 @@
-import { Movie } from '../types/movie';
+// src/services/movieService.ts
+// Сервіс для виконання HTTP-запитів до TMDB API
+
+import type { Movie } from '../types/movie';
 
 interface TMDBResponse {
   page: number;
@@ -7,12 +10,12 @@ interface TMDBResponse {
   total_results: number;
 }
 
-export const fetchMovies = async (query: string): Promise<Movie[]> => {
-  const TMDB_TOKEN = import.meta.env.VITE_TMDB_TOKEN;
+// Використовуємо демо токен для тестування
+// В реальному проєкті замініть на: import.meta.env.VITE_TMDB_TOKEN
+const DEMO_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5ZjE0M2Y3OTFmMzZhM2M4MmY0NzZkYzQ4NGI1Yzg0ZSIsIm5iZiI6MTczMTc3MDczNi45MjU5NzE2LCJzdWIiOiI2NzM3MDJkMDJiZjMyNjgyZjY0NTU0ZTIiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.F3FstrKvjMZqBoUi_VHAZrqjxPqVbnh6hYZJqkJmEQg';
 
-  if (!TMDB_TOKEN) {
-    throw new Error('TMDB token is not configured');
-  }
+export const fetchMovies = async (query: string): Promise<Movie[]> => {
+  const TMDB_TOKEN = import.meta.env.VITE_TMDB_TOKEN || DEMO_TOKEN;
 
   const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
     query

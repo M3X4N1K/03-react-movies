@@ -1,4 +1,7 @@
-import { Movie } from '../../types/movie';
+// src/components/MovieGrid/MovieGrid.tsx
+// Компонент галереї фільмів - відображає сітку карток
+
+import type { Movie } from '../../types/movie';
 import styles from './MovieGrid.module.css';
 
 interface MovieGridProps {

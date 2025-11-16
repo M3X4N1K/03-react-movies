@@ -1,6 +1,9 @@
+// src/components/App/App.tsx
+// Головний компонент застосунку - управління станом та логікою
+
 import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
-import { Movie } from '../../types/movie';
+import type { Movie } from '../../types/movie';
 import { fetchMovies } from '../../services/movieService';
 import SearchBar from '../SearchBar/SearchBar';
 import MovieGrid from '../MovieGrid/MovieGrid';

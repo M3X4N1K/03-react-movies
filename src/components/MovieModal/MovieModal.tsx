@@ -1,6 +1,10 @@
-import { useEffect, MouseEvent } from 'react';
+// src/components/MovieModal/MovieModal.tsx
+// Компонент модального вікна з детальною інформацією про фільм
+
+import { useEffect } from 'react';
+import type { MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
-import { Movie } from '../../types/movie';
+import type { Movie } from '../../types/movie';
 import styles from './MovieModal.module.css';
 
 interface MovieModalProps {
