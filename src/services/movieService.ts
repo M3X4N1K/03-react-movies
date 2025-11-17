@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 import type { Movie } from '../types/movie';
 
@@ -8,9 +9,8 @@ interface TMDBResponse {
   total_results: number;
 }
 
-// Використовуємо демо токен для тестування
-// В реальному проєкті замініть на: import.meta.env.VITE_TMDB_TOKEN
-const DEMO_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5ZjE0M2Y3OTFmMzZhM2M4MmY0NzZkYzQ4NGI1Yzg0ZSIsIm5iZiI6MTczMTc3MDczNi45MjU5NzE2LCJzdWIiOiI2NzM3MDJkMDJiZjMyNjgyZjY0NTU0ZTIiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.F3FstrKvjMZqBoUi_VHAZrqjxPqVbnh6hYZJqkJmEQg';
+// Оновлений робочий токен для TMDB API
+const DEMO_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1OWE0N2JlZTIwODExYzJlMTZiMWZkNDE2MTE2YmE4NCIsIm5iZiI6MTc2MzMwODQzMy4wMzUsInN1YiI6IjY5MTlmMzkxOTY1YjM1YmIyMzlhZTgxNyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GLEvCTL79qMh6E_SEgQdMz5akL68ja57pAmnZzLPzmk';
 
 export const fetchMovies = async (query: string): Promise<Movie[]> => {
   const TMDB_TOKEN = import.meta.env.VITE_TMDB_TOKEN || DEMO_TOKEN;
