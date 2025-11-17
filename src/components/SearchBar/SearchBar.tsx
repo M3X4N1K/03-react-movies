@@ -1,50 +1,35 @@
-// src/components/SearchBar/SearchBar.tsx
-// Компонент хедера з формою пошуку фільмів
 
-import toast from 'react-hot-toast';
-import styles from './SearchBar.module.css';
 
-interface SearchBarProps {
-  onSubmit: (query: string) => void;
+import axios from 'axios';
+import type { Movie } from '../types/movie';
+
+interface TMDBResponse {
+  page: number;
+  results: Movie[];
+  total_pages: number;
+  total_results: number;
 }
 
-export default function SearchBar({ onSubmit }: SearchBarProps) {
-  const handleFormAction = (formData: FormData) => {
-    const query = formData.get('query') as string;
+// Оновлений робочий токен для TMDB API
+const DEMO_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhNzYzMzEyZTEzNjEzMDU5ZWM2MTJmOGFmNWI4ZmI0NiIsIm5iZiI6MTczMTg2MTk3My4wMDM3NzI3LCJzdWIiOiI2NzM4MzgyZGVhOTIwMDFiN2IxMjM5NzgiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.C0KN_2RNgHhNXpJ3t5w7sLlKcHvB5r7VhNjQqJk8rZo';
 
-    if (!query.trim()) {
-      toast.error('Please enter your search query.');
-      return;
+export const fetchMovies = async (query: string): Promise<Movie[]> => {
+  const TMDB_TOKEN = import.meta.env.VITE_TMDB_TOKEN || DEMO_TOKEN;
+
+  const response = await axios.get<TMDBResponse>(
+    'https://api.themoviedb.org/3/search/movie',
+    {
+      params: {
+        query,
+        include_adult: false,
+        language: 'en-US',
+        page: 1,
+      },
+      headers: {
+        Authorization: `Bearer ${TMDB_TOKEN}`,
+      },
     }
-
-    onSubmit(query.trim());
-  };
-
-  return (
-    <header className={styles.header}>
-      <div className={styles.container}>
-        <a
-          className={styles.link}
-          href="https://www.themoviedb.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by TMDB
-        </a>
-        <form className={styles.form} action={handleFormAction}>
-          <input
-            className={styles.input}
-            type="text"
-            name="query"
-            autoComplete="off"
-            placeholder="Search movies..."
-            autoFocus
-          />
-          <button className={styles.button} type="submit">
-            Search
-          </button>
-        </form>
-      </div>
-    </header>
   );
-}
+
+  return response.data.results;
+};
