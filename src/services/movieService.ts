@@ -1,6 +1,4 @@
-// src/services/movieService.ts
-// Сервіс для виконання HTTP-запитів до TMDB API
-
+import axios from 'axios';
 import type { Movie } from '../types/movie';
 
 interface TMDBResponse {
@@ -17,21 +15,20 @@ const DEMO_TOKEN = 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5ZjE0M2Y3OTFmMzZhM2M4MmY0NzZ
 export const fetchMovies = async (query: string): Promise<Movie[]> => {
   const TMDB_TOKEN = import.meta.env.VITE_TMDB_TOKEN || DEMO_TOKEN;
 
-  const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
-    query
-  )}&include_adult=false&language=en-US&page=1`;
+  const response = await axios.get<TMDBResponse>(
+    'https://api.themoviedb.org/3/search/movie',
+    {
+      params: {
+        query,
+        include_adult: false,
+        language: 'en-US',
+        page: 1,
+      },
+      headers: {
+        Authorization: `Bearer ${TMDB_TOKEN}`,
+      },
+    }
+  );
 
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${TMDB_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-
-  const data: TMDBResponse = await response.json();
-  return data.results;
+  return response.data.results;
 };

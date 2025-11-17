@@ -1,7 +1,6 @@
 // src/components/SearchBar/SearchBar.tsx
 // Компонент хедера з формою пошуку фільмів
 
-import type { FormEvent } from 'react';
 import toast from 'react-hot-toast';
 import styles from './SearchBar.module.css';
 
@@ -10,11 +9,7 @@ interface SearchBarProps {
 }
 
 export default function SearchBar({ onSubmit }: SearchBarProps) {
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const form = e.currentTarget;
-    const formData = new FormData(form);
+  const handleFormAction = (formData: FormData) => {
     const query = formData.get('query') as string;
 
     if (!query.trim()) {
@@ -23,7 +18,6 @@ export default function SearchBar({ onSubmit }: SearchBarProps) {
     }
 
     onSubmit(query.trim());
-    form.reset();
   };
 
   return (
@@ -37,7 +31,7 @@ export default function SearchBar({ onSubmit }: SearchBarProps) {
         >
           Powered by TMDB
         </a>
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form} action={handleFormAction}>
           <input
             className={styles.input}
             type="text"
